@@ -3,7 +3,7 @@
         <div class="d-flex">
             <!-- LOGO -->
             <div class="navbar-brand-box">
-                <a href="index.html" class="logo logo-dark">
+                <a href="{{route('dashboard')}}" class="logo logo-dark">
                                 <span class="logo-sm">
                                     <img src="{{asset('backend/assets/images/logo-sm.png')}}" alt="logo-sm" height="22">
                                 </span>
@@ -12,7 +12,7 @@
                                 </span>
                 </a>
 
-                <a href="index.html" class="logo logo-light">
+                <a href="{{route('dashboard')}}" class="logo logo-light">
                                 <span class="logo-sm">
                                     <img src="{{asset('backend/assets/images/logo-sm.png')}}" alt="logo-sm-light" height="22">
                                 </span>
@@ -182,13 +182,19 @@
             </div>
 
 
+            @php
+                $id = \Illuminate\Support\Facades\Auth::user()->id;
+                $admin_data=\App\Models\User::find($id);
+            @endphp
 
             <div class="dropdown d-inline-block user-dropdown">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="{{asset('backend/assets/images/users/avatar-1.jpg')}}"
+                    <img
+                        class="rounded-circle header-profile-user"
+                         src="{{ empty($admin_data->profile_image) ? url('upload/no_image.jpg') : url('upload/admin_images/'.$admin_data->profile_image) }}"
                          alt="Header Avatar">
-                    <span class="d-none d-xl-inline-block ms-1">Julia</span>
+                    <span class="d-none d-xl-inline-block ms-1">{{$admin_data->name}}</span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">

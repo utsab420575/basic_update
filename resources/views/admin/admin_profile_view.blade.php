@@ -5,7 +5,12 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="card">
-                        <img class="rounded-circle avatar-xl mx-auto d-block mt-2" alt="300x300" data-holder-rendered="true" src="{{ asset('backend/assets/images/small/img-5.jpg') }}">
+                        <img
+                            class="rounded-circle avatar-xl mx-auto d-block mt-2"
+                            style="width: 200px; height: 200px;object-fit: contain;"
+                            alt="300x300"
+                            data-holder-rendered="true"
+                            src="{{ empty($admin_data->profile_image) ? url('upload/no_image.jpg') : url('upload/admin_images/'.$admin_data->profile_image) }}">
                         <div class="card-body">
                             <h4 class="card-title">Name : {{$admin_data->name}}</h4>
                             <hr>
