@@ -15,9 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     //return "Hi Utsab";
     return view('welcome');
+});*/
+
+Route::get('/', function () {
+    //return "Hi Utsab";
+    return view('frontend.index');
 });
 
 Route::controller(AdminController::class)->group(function (){
