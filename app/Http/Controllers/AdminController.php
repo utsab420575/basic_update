@@ -7,6 +7,7 @@ use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -21,8 +22,12 @@ class AdminController extends Controller
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
-        //After logout redirect to login
-        return redirect('/login');
+        //After logout redirect to login and send session data for showing tostr message
+        $notification=array(
+            "message"=>'Profile Logout Sucessfully',
+            "alert-type"=>'info');
+        return redirect()->route('login')->with($notification);
+        //return redirect('/login')->with($notification);
     }
     public function Profile(){
         /*If no user is authenticated (e.g., the user isn't logged in),
@@ -121,7 +126,10 @@ class AdminController extends Controller
                 //return $store_data;
                 $store_data->save();
 
-                return redirect()->route('admin.profile');
+                $notification=array(
+                    "message"=>'Admin Profile Updated Sucessfully',
+                    "alert-type"=>'success');
+                return redirect()->route('admin.profile')->with($notification);
             }catch (Exception $e){
                 // Log the error
                 Log::error('Error updating user profile: ' . $e->getMessage());
@@ -134,5 +142,37 @@ class AdminController extends Controller
             // Redirect if not authenticated
             return redirect()->route('login')->withErrors('You need to be logged in to perform this action.');
         }
+    }
+    public function ChangePassword(){
+        return view('admin.admin_change_password');
+    }
+
+    public function UpdatePassword(Request $request){
+        $request->validate([
+            'old_password' => 'required',
+            'new_password' => 'required|min:5',
+            'confirm_password' => 'required|min:5|same:new_password',
+        ], [
+            'confirm_password.same' => 'The confirm password does not match the new password.',
+        ]);
+
+        $id=Auth::user()->id;
+        $user=User::find($id);
+        if(!Hash::check($request->old_password,$user->password)){
+            //Flash message for old password not correct
+            return redirect()->back()->with([
+                'message' => 'The old password is incorrect.',
+                'alert-type' => 'error'
+            ]);
+           // session()->flash('message', 'The old password is incorrect.');
+           // return redirect()->back();
+        }
+        // Update the password
+        $user->update(['password' => Hash::make($request->new_password)]);
+        // Success message
+        return redirect()->back()->with([
+            'message' => 'Data saved successfully!',
+            'alert-type' => 'success'
+        ]);
     }
 }

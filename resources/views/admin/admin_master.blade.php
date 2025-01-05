@@ -28,6 +28,9 @@
     <link href="{{asset('backend/assets/css/icons.min.css')}}" rel="stylesheet" type="text/css" />
     <!-- App Css-->
     <link href="{{asset('backend/assets/css/app.min.css')}}" id="app-style" rel="stylesheet" type="text/css" />
+    <!-- Toaster Css-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+
 
 </head>
 
@@ -143,6 +146,43 @@
 
 <!-- App js -->
 <script src="{{asset('backend/assets/js/app.js')}}"></script>
+
+<!-- Toaster JS -->
+{{--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>--}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<!-- Display Toastr in Blade -->
+<script>
+    @if(Session::has('message'))
+        toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "5000"
+    };
+
+    var type = "{{ Session::get('alert-type', 'info') }}";
+    switch (type) {
+        case 'info':
+            toastr.info("{{ Session::get('message') }}");
+            break;
+
+        case 'success':
+            toastr.success("{{ Session::get('message') }}");
+            break;
+
+        case 'warning':
+            toastr.warning("{{ Session::get('message') }}");
+            break;
+
+        case 'error':
+            toastr.error("{{ Session::get('message') }}");
+            break;
+    }
+    @endif
+</script>
+
+
 </body>
 
 </html>
