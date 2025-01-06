@@ -39,7 +39,9 @@
 <!-- header-area-end -->
 
 <!-- main-area -->
+<main>
 @yield('main')
+</main>
 <!-- main-area-end -->
 
 

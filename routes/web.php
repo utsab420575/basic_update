@@ -21,8 +21,9 @@ use Illuminate\Support\Facades\Route;
 });*/
 
 Route::get('/', function () {
-    //return "Hi Utsab";
-    return view('frontend.index');
+    return "Hi Utsab";
+    //return view('frontend.index');
+    //return view('job_fair');
 });
 
 Route::controller(AdminController::class)->group(function (){
@@ -45,6 +46,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::get('/jobfair', function () {
+    return "Hi Utsab";
+    //return view('job_fair');
 });
 
 require __DIR__.'/auth.php';

@@ -1,6 +1,6 @@
 @extends('frontend.forntend_master')
 @section('main')
-<main>
+
 
     <!-- banner-area -->
     <section class="banner">
@@ -1089,5 +1089,5 @@
     </section>
     <!-- contact-area-end -->
 
-</main>
+
 @endsection
