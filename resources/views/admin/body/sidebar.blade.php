@@ -52,6 +52,20 @@
                     </ul>
                 </li>
 
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="ri-mail-send-line"></i>
+                        <span>Home Slider Setup</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                       {{-- <li><a href="http://127.0.0.1:8000/home/slide">Home Slide</a></li>--}}
+                        <li><a href="{{ route('home.slide') }}">Home Slide</a></li>
+
+                        {{--<li><a href="{{route('home.slide')}}">Home Slide</a></li>--}}
+                    </ul>
+                </li>
+
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="ri-layout-3-line"></i>

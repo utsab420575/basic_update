@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Home\HomeSliderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -52,5 +53,13 @@ Route::get('/jobfair', function () {
     return "Hi Utsab";
     //return view('job_fair');
 });
+
+//HomeSlide Controller
+Route::controller(HomeSliderController::class)->group(function (){
+    Route::get('/home/slide','HomeSlider')->name('home.slide');
+    Route::post('/update/slider','UpdateSlider')->name('update.slider');
+});
+
+/*Route::get('/home/slide', [HomeSliderController::class, 'HomeSlider'])->name('home.slide');*/
 
 require __DIR__.'/auth.php';
