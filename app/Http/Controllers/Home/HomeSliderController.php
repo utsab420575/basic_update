@@ -97,7 +97,17 @@ class HomeSliderController extends Controller
             //return $store_data;
             $stored_slider_data->save();
 
-            return redirect()->route('home.slide');
+            return back()->with([
+                'message' => 'Home Slide Update Succesfully',
+                'alert-type' => 'info',
+            ]);
+
+            //same thing(back===home.slide)
+            return redirect()->route('home.slide')->with([
+                'message' => 'Home Slide Update Succesfully',
+                'alert-type' => 'info',
+            ]);
+
         }catch (Exception $e){
             // Log the error
             Log::error('Error updating user profile: ' . $e->getMessage());
