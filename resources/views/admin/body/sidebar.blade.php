@@ -77,7 +77,10 @@
                         {{-- <li><a href="http://127.0.0.1:8000/home/slide">Home Slide</a></li>--}}
                         <li><a href="{{route('about.page')}}">About</a> </li>
 
-                        {{--<li><a href="{{route('home.slide')}}">Home Slide</a></li>--}}
+                        <li><a href="{{route('about.multi.image')}}">About Multi Image</a> </li>
+                        <li><a href="{{route('all.multi.image')}}">All Multi Image</a> </li>
+
+
                     </ul>
                 </li>
 
