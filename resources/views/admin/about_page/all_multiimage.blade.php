@@ -34,7 +34,8 @@
                                             <td><img src="{{asset($singleImage->multi_image)}}" width="60px" height="50px"></td>
                                             <td>
                                                 <a href="{{route('edit.multi.image',$singleImage->id)}}" class="btn btn-info sm"><i class="fas fa-edit"></i></a>
-                                                <a href="" class="btn btn-danger sm"><i class="fas fa-trash-alt"></i></a>
+
+                                                <a href="{{route('delete.multi.image',$singleImage->id)}}" class="btn btn-danger delete sm"><i class="fas fa-trash-alt"></i></a>
                                             </td>
                                         </tr>
                                     @endforeach

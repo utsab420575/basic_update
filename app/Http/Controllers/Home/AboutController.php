@@ -245,7 +245,9 @@ class AboutController extends Controller
         $validated = $request->validate([
             'edit_multi_image_button' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Image validation
         ],[
-            'edit_multi_image_button'=>'Please Select Image File For Update(jpeg,png,jpg,gif,svg)'
+            'edit_multi_image_button.image' => 'The file must be an image.', // Generic message if the file isn't an image
+            'edit_multi_image_button.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif, svg.', // Specific to types
+            'edit_multi_image_button.max' => 'The image size must not exceed 2MB.', // Specific to size
         ]);
 
         $multi_image_id=$request->id;
@@ -335,6 +337,34 @@ class AboutController extends Controller
             ]);
         }
 
+    }
+    public function DeleteMultiImage($id){
+        $multiImageData=MultiImage::find($id);
+        if($multiImageData){
+            $image_path=$multiImageData->multi_image;
+            if($image_path && file_exists(public_path($image_path))){
+                unlink(public_path($image_path));
+                $multiImageData->delete();
+                return redirect()->back()->with(
+                    [
+                        'message'=>'Delete Image Successfully',
+                        'alert-type'=>'success'
+                    ]);
+            }else{
+                $multiImageData->delete();
+                return redirect()->back()->with(
+                    [
+                        'message'=>'Database entry deleted,Image Not Found',
+                        'alert-type'=>'info'
+                    ]);
+            }
+        }else{
+            return redirect()->back()->withErrors(
+                [
+                    'message'=>'This Id have no data',
+                    'alert-type'=>'error'
+                ]);
+        }
     }
 
 }
