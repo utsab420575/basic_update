@@ -45,9 +45,9 @@
                                         <td>{{$singlePortfolio->portfolio_title}}</td>
                                         <td><img src="{{asset($singlePortfolio->portfolio_image)}}" width="60px" height="50px"></td>
                                         <td>
-                                            <a href="{{route('edit.multi.image',$singleImage->id)}}" class="btn btn-info sm"><i class="fas fa-edit"></i></a>
+                                            <a href="{{route('edit.portfolio',$singlePortfolio->id)}}" class="btn btn-info sm"><i class="fas fa-edit"></i></a>
 
-                                            <a href="{{route('delete.multi.image',$singleImage->id)}}" class="btn btn-danger delete sm"><i class="fas fa-trash-alt"></i></a>
+                                            <a href="{{route('delete.portfolio',$singlePortfolio->id)}}" class="btn btn-danger delete sm"><i class="fas fa-trash-alt"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach

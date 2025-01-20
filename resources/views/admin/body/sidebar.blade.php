@@ -93,7 +93,7 @@
                     <ul class="sub-menu" aria-expanded="false">
                         {{-- <li><a href="http://127.0.0.1:8000/home/slide">Home Slide</a></li>--}}
                         <li><a href="{{route('all.portfolio')}}">All Proftfolio</a> </li>
-                        <li><a href="">Add Protfolio</a> </li>
+                        <li><a href="{{route('add.portfolio')}}">Add Protfolio</a> </li>
 
                     </ul>
                 </li>

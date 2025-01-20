@@ -338,33 +338,51 @@ class AboutController extends Controller
         }
 
     }
-    public function DeleteMultiImage($id){
-        $multiImageData=MultiImage::find($id);
-        if($multiImageData){
-            $image_path=$multiImageData->multi_image;
-            if($image_path && file_exists(public_path($image_path))){
+    public function DeletePortfolio($id) {
+        // Find the portfolio data by its ID
+        $portfolio_data = Portfolio::find($id);
+
+        // Check if the portfolio exists
+        if ($portfolio_data) {
+            // Get the image path of the portfolio
+            $image_path = $portfolio_data->portfolio_image;
+
+            // Check if the image exists in the specified path and is a valid file
+            if ($image_path && file_exists(public_path($image_path))) {
+                // If the image exists, delete it from the public directory
                 unlink(public_path($image_path));
-                $multiImageData->delete();
-                return redirect()->back()->with(
-                    [
-                        'message'=>'Delete Image Successfully',
-                        'alert-type'=>'success'
-                    ]);
-            }else{
-                $multiImageData->delete();
-                return redirect()->back()->with(
-                    [
-                        'message'=>'Database entry deleted,Image Not Found',
-                        'alert-type'=>'info'
-                    ]);
+
+                // Delete the portfolio record from the database
+                $portfolio_data->delete();
+
+                // Prepare success notification message when image and data are deleted
+                $notifications = [
+                    'message' => 'Image With Data Deleted Successfully',
+                    'alert-type' => 'success', // Alert type success for positive feedback
+                ];
+            } else {
+                // If image does not exist, just delete the data
+                $portfolio_data->delete();
+
+                // Prepare success notification message when only data is deleted (no image found)
+                $notifications = [
+                    'message' => 'Data Deleted Successfully(Image Not Found)',
+                    'alert-type' => 'success', // Alert type success for positive feedback
+                ];
             }
-        }else{
+
+            // Redirect back to the previous page with the success notification
+            return redirect()->back()->with($notifications);
+        } else {
+            // If no portfolio is found for the given ID, prepare error notification
             return redirect()->back()->withErrors(
                 [
-                    'message'=>'This Id have no data',
-                    'alert-type'=>'error'
-                ]);
+                    'message' => 'This Id have no data', // Error message if ID is not found
+                    'alert-type' => 'error' // Alert type error for negative feedback
+                ]
+            );
         }
     }
+
 
 }
