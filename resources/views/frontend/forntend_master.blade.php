@@ -35,7 +35,7 @@
 <!-- Scroll-top-end-->
 
 <!-- header-area -->
-@include('frontend.body.header');
+@include('frontend.body.header')
 <!-- header-area-end -->
 
 <!-- main-area -->
@@ -47,7 +47,7 @@
 
 
 <!-- Footer-area -->
-@include('frontend.body.footer');
+@include('frontend.body.footer')
 <!-- Footer-area-end -->
 
 

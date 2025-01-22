@@ -7,23 +7,28 @@ use App\Models\Portfolio;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Intervention\Image\Drivers\Gd\Driver;
+
 use Intervention\Image\ImageManager;
 
 class PortfolioController extends Controller
 {
-    public function AllPortfolio(){
+    public function AllPortfolio()
+    {
         //ORDER BY created_at DESC
-        $allPortfolio=Portfolio::latest()->get();
-        return view('admin.portfolio.protfolio_all',['allPortfolio'=>$allPortfolio]);
+        $allPortfolio = Portfolio::latest()->get();
+        return view('admin.portfolio.protfolio_all', ['allPortfolio' => $allPortfolio]);
     }
-    public function AddPortfolio(){
+
+    public function AddPortfolio()
+    {
         return view('admin.portfolio.portfolio_add');
     }
 
-/*    public function StorePortfolio(Request $request){
-        return $request;
-    }*/
-    public function StorePortfolio(Request $request){
+    /*    public function StorePortfolio(Request $request){
+            return $request;
+        }*/
+    public function StorePortfolio(Request $request)
+    {
         //return $request->all();
         // Validation rules
         $validatedData = $request->validate([
@@ -45,8 +50,18 @@ class PortfolioController extends Controller
                 // read image from file system
                 $image = $manager->read($request->file('portfolio_image_button'));
 
-                // resize image proportionally to 300px width
-                $image->scale(1020,519);
+                // Proportional resize to fit within 1020x519, smaller dimension matches (aspect ratio preserved)
+               // $image->scale(1020, 519);
+
+                // Resize to exactly 1020x519, ignoring aspect ratio (image may stretch or distort)
+               // $image->resize(1020, 519);
+
+                // Proportional resize to fit within 1020x519, adds padding for blank space if needed
+               // $image->contain(1020, 519);
+
+                // Proportional resize to fill 1020x519, crops overflow to fit target dimensions
+                $image->cover(1020, 519);
+
 
 
                 //make file name unique
@@ -85,11 +100,11 @@ class PortfolioController extends Controller
 
             //return $request->all();
             Portfolio::create([
-               'portfolio_name'=>$request->portfolio_name,
-               'portfolio_title'=>$request->portfolio_title,
-               'portfolio_description'=>$request->portfolio_description,
-               'portfolio_image'=>$relativePath.'/'.$fileName,
-                'created_at'=>Carbon::now()
+                'portfolio_name' => $request->portfolio_name,
+                'portfolio_title' => $request->portfolio_title,
+                'portfolio_description' => $request->portfolio_description,
+                'portfolio_image' => $relativePath . '/' . $fileName,
+                'created_at' => Carbon::now()
             ]);
 
             $notification = array(
@@ -109,25 +124,29 @@ class PortfolioController extends Controller
             return redirect()->back()->withErrors('Something went wrong. Please try again later.');
         }
     }
-    public function EditPortfolio($id){
-        $portfolio_data=Portfolio::find($id);
-       // return $portfolio_data;
-        if($portfolio_data){
-            return view('admin.portfolio.portfolio_edit',['portfolio_data'=>$portfolio_data]);
-        }else{
+
+    public function EditPortfolio($id)
+    {
+        $portfolio_data = Portfolio::find($id);
+        // return $portfolio_data;
+        if ($portfolio_data) {
+            return view('admin.portfolio.portfolio_edit', ['portfolio_data' => $portfolio_data]);
+        } else {
             return redirect()->back()->withErrors('Data Not Available');
         }
     }
-    public function UpdatePortfolio(Request $request){
+
+    public function UpdatePortfolio(Request $request)
+    {
         $validatedData = $request->validate([
             'portfolio_name' => 'required|string|max:255',
             'portfolio_title' => 'required|string|max:255',
             'portfolio_description' => 'required|string',
-            'portfolio_image_button' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', //must be an image
+            'portfolio_image_button' => 'nullable|image|mimes:jpg,jpeg,png|max:3072', //must be an image
         ]);
 
-        $portfolio_retrive_id=$request->id;
-        $portfolio_data=Portfolio::find($portfolio_retrive_id);
+        $portfolio_retrive_id = $request->id;
+        $portfolio_data = Portfolio::find($portfolio_retrive_id);
         if ($portfolio_data) {
             //store data into database/update into databasae
             $portfolio_data->portfolio_name = $request->portfolio_name;
@@ -147,13 +166,25 @@ class PortfolioController extends Controller
                     $recive_file = $request->file('portfolio_image_button');
 
                     // create image manager with desired driver
-                    $manager = new ImageManager(new Driver());
+                    // $manager = new ImageManager(new Driver());
+                    $manager = new ImageManager(Driver::class);
+
 
                     // read image from file system
                     $image = $manager->read($request->file('portfolio_image_button'));
+                    //$image = $manager->read($recive_file);
 
-                    // resize image proportionally to 300px width
-                    $image->scale(1020,519);
+                    // Proportional resize to fit within 1020x519, smaller dimension matches (aspect ratio preserved)
+                   // $image->scale(1020, 519);
+
+                    // Resize to exactly 1020x519, ignoring aspect ratio (image may stretch or distort)
+                   // $image->resize(1020, 519);
+
+                    // Proportional resize to fit within 1020x519, adds padding for blank space if needed
+                  //  $image->contain(1020, 519);
+
+                    // Proportional resize to fill 1020x519, crops overflow to fit target dimensions
+                    $image->cover(1020, 519);
 
 
                     //make file name unique
@@ -196,7 +227,7 @@ class PortfolioController extends Controller
                 //return $store_data;
                 $portfolio_data->save();
 
-               //return back()->with($notification);
+                //return back()->with($notification);
                 return redirect()->route('all.portfolio')->with($notification);
 
             } catch (Exception $e) {
@@ -216,32 +247,40 @@ class PortfolioController extends Controller
 
 
     }
-    public function DeletePortfolio($id){
-        $portfolio_data=Portfolio::find($id);
-        if($portfolio_data){
-            $image_path=$portfolio_data->portfolio_image;
-            if($image_path && file_exists(public_path($image_path))){
+
+    public function DeletePortfolio($id)
+    {
+        $portfolio_data = Portfolio::find($id);
+        if ($portfolio_data) {
+            $image_path = $portfolio_data->portfolio_image;
+            if ($image_path && file_exists(public_path($image_path))) {
                 unlink(public_path($image_path));
                 $portfolio_data->delete();
-                $notifications=[
+                $notifications = [
                     'message' => 'Image With Data Deleted Successfully',
                     'alert-type' => 'success',
                 ];
-            }else{
+            } else {
                 $portfolio_data->delete();
-                $notifications=[
+                $notifications = [
                     'message' => 'Data Deleted Successfully(Image Not Found)',
                     'alert-type' => 'success',
                 ];
             }
 
             return redirect()->back()->with($notifications);
-        }else{
+        } else {
             return redirect()->back()->withErrors(
                 [
-                    'message'=>'This Id have no data',
-                    'alert-type'=>'error'
+                    'message' => 'This Id have no data',
+                    'alert-type' => 'error'
                 ]);
+        }
+    }
+    public function PortfolioDetails($id){
+        $portfolio_single_data=Portfolio::find($id);
+        if($portfolio_single_data){
+            return view('frontend.portfolio_details',['portfolio_single_data'=>$portfolio_single_data]);
         }
     }
 }
